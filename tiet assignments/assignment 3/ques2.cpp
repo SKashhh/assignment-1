@@ -1,22 +1,37 @@
 #include <iostream>
-#include <stack>
 using namespace std;
 
+#define MAX 100
+char stack[MAX];
+int top = -1;
+
+void push(char c) {
+    stack[++top] = c;
+}
+
+char pop() {
+    return stack[top--];
+}
+
+int strLength(char str[]) {
+    int i = 0;
+    while (str[i] != '\0') i++;
+    return i;
+}
+
 int main() {
-    string str;
+    char str[MAX];
     cout << "Enter a string: ";
     cin >> str;
 
-    stack<char> s;
-
-    for (char c : str) {
-        s.push(c);
+    int n = strLength(str);
+    for (int i = 0; i < n; i++) {
+        push(str[i]);
     }
 
     cout << "Reversed string: ";
-    while (!s.empty()) {
-        cout << s.top();
-        s.pop();
+    while (top != -1) {
+        cout << pop();
     }
     cout << endl;
 

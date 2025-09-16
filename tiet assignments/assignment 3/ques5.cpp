@@ -1,27 +1,58 @@
 #include <iostream>
-#include <stack>
 using namespace std;
 
-int main() {
-    string exp;
-    cout << "Enter postfix: ";
-    cin >> exp;
+#define MAX 100
+int stack[MAX];
+int top = -1;
 
-    stack<int> st;
-    for(int i=0; i<exp.length(); i++) {
+void push(int x) {
+    stack[++top] = x;
+}
+
+int pop() {
+    return stack[top--];
+}
+
+int strLength(char str[]) {
+    int i = 0;
+    while (str[i] != '\0') i++;
+    return i;
+}
+
+int power(int base, int exp) {
+    int result = 1;
+    for (int i = 0; i < exp; i++) {
+        result *= base;
+    }
+    return result;
+}
+
+int evaluatePostfix(char exp[]) {
+    int n = strLength(exp);
+    for (int i = 0; i < n; i++) {
         char c = exp[i];
-        if(isdigit(c)) {
-            st.push(c - '0');
+        if (c >= '0' && c <= '9') {
+            push(c - '0');
         } else {
-            int val2 = st.top(); st.pop();
-            int val1 = st.top(); st.pop();
-            int res = 0;
-            if(c=='+') res = val1 + val2;
-            else if(c=='-') res = val1 - val2;
-            else if(c=='*') res = val1 * val2;
-            else if(c=='/') res = val1 / val2;
-            st.push(res);
+            int val2 = pop();
+            int val1 = pop();
+            switch (c) {
+                case '+': push(val1 + val2); break;
+                case '-': push(val1 - val2); break;
+                case '*': push(val1 * val2); break;
+                case '/': push(val1 / val2); break;
+                case '^': push(power(val1, val2)); break;
+            }
         }
     }
-    cout << "Result: " << st.top();
+    return pop();
+}
+
+int main() {
+    char exp[MAX];
+    cout << "Enter postfix expression (single digit only): ";
+    cin >> exp;
+
+    cout << "Result = " << evaluatePostfix(exp) << endl;
+    return 0;
 }
